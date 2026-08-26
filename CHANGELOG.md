@@ -7,6 +7,8 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-08-26
+
 ### Added
 - Added migration tool to import data from Custom Fonts by Brainstorm Force
 - Added migration tool to import data from Custom Adobe Fonts
@@ -464,6 +466,7 @@ and the Pro release major version is one higher than the matching Free release.
 - Initial release.
 
 [unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...HEAD
+[2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...2.1.0
 [2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.114...2.1.0
 [2.0.114]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.100...2.0.114
 [2.0.100]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.98...2.0.100
