@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: custom fonts, google fonts, adobe fonts, gdpr, dsgvo
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -71,6 +71,12 @@ Visit [our website](https://fon.jooo.si) for more information.
 [youtube https://www.youtube.com/watch?v=A0JZzEVIUzQ]
 
 == Changelog ==
+
+= 1.1.1 - 2026-08-26 =
+
+**Fixed**
+
+* Prevent scoped release builds from generating broken proxies for WordPress functions declared by test stubs.
 
 = 1.1.0 - 2026-08-26 =
 

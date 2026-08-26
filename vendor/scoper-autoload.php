@@ -34,8 +34,6 @@ if (!function_exists('humbug_phpscoper_expose_class')) {
     }
 }
 humbug_phpscoper_expose_class('JOOOSI_FON', 'JooosiFonDeps\JOOOSI_FON');
-humbug_phpscoper_expose_class('WP_Theme_JSON_Resolver', 'JooosiFonDeps\WP_Theme_JSON_Resolver');
-humbug_phpscoper_expose_class('WP_Error', 'JooosiFonDeps\WP_Error');
 humbug_phpscoper_expose_class('Normalizer', 'JooosiFonDeps\Normalizer');
 humbug_phpscoper_expose_class('Attribute', 'JooosiFonDeps\Attribute');
 humbug_phpscoper_expose_class('PhpToken', 'JooosiFonDeps\PhpToken');
@@ -45,12 +43,6 @@ humbug_phpscoper_expose_class('ValueError', 'JooosiFonDeps\ValueError');
 
 // Function aliases. For more information see:
 // https://github.com/humbug/php-scoper/blob/master/docs/further-reading.md#function-aliases
-if (!function_exists('__')) { function __() { return \JooosiFonDeps\__(...func_get_args()); } }
-if (!function_exists('__return_null')) { function __return_null() { return \JooosiFonDeps\__return_null(...func_get_args()); } }
-if (!function_exists('add_action')) { function add_action() { return \JooosiFonDeps\add_action(...func_get_args()); } }
-if (!function_exists('add_filter')) { function add_filter() { return \JooosiFonDeps\add_filter(...func_get_args()); } }
-if (!function_exists('add_query_arg')) { function add_query_arg() { return \JooosiFonDeps\add_query_arg(...func_get_args()); } }
-if (!function_exists('apply_filters')) { function apply_filters() { return \JooosiFonDeps\apply_filters(...func_get_args()); } }
 if (!function_exists('ctype_alnum')) { function ctype_alnum() { return \JooosiFonDeps\ctype_alnum(...func_get_args()); } }
 if (!function_exists('ctype_alpha')) { function ctype_alpha() { return \JooosiFonDeps\ctype_alpha(...func_get_args()); } }
 if (!function_exists('ctype_cntrl')) { function ctype_cntrl() { return \JooosiFonDeps\ctype_cntrl(...func_get_args()); } }
@@ -62,22 +54,9 @@ if (!function_exists('ctype_punct')) { function ctype_punct() { return \JooosiFo
 if (!function_exists('ctype_space')) { function ctype_space() { return \JooosiFonDeps\ctype_space(...func_get_args()); } }
 if (!function_exists('ctype_upper')) { function ctype_upper() { return \JooosiFonDeps\ctype_upper(...func_get_args()); } }
 if (!function_exists('ctype_xdigit')) { function ctype_xdigit() { return \JooosiFonDeps\ctype_xdigit(...func_get_args()); } }
-if (!function_exists('current_time')) { function current_time() { return \JooosiFonDeps\current_time(...func_get_args()); } }
-if (!function_exists('current_user_can')) { function current_user_can() { return \JooosiFonDeps\current_user_can(...func_get_args()); } }
-if (!function_exists('dbDelta')) { function dbDelta() { return \JooosiFonDeps\dbDelta(...func_get_args()); } }
-if (!function_exists('delete_option')) { function delete_option() { return \JooosiFonDeps\delete_option(...func_get_args()); } }
-if (!function_exists('delete_site_transient')) { function delete_site_transient() { return \JooosiFonDeps\delete_site_transient(...func_get_args()); } }
-if (!function_exists('delete_transient')) { function delete_transient() { return \JooosiFonDeps\delete_transient(...func_get_args()); } }
-if (!function_exists('did_action')) { function did_action() { return \JooosiFonDeps\did_action(...func_get_args()); } }
-if (!function_exists('do_action')) { function do_action() { return \JooosiFonDeps\do_action(...func_get_args()); } }
-if (!function_exists('do_action_deprecated')) { function do_action_deprecated() { return \JooosiFonDeps\do_action_deprecated(...func_get_args()); } }
-if (!function_exists('doing_action')) { function doing_action() { return \JooosiFonDeps\doing_action(...func_get_args()); } }
 if (!function_exists('fdiv')) { function fdiv() { return \JooosiFonDeps\fdiv(...func_get_args()); } }
 if (!function_exists('get_debug_type')) { function get_debug_type() { return \JooosiFonDeps\get_debug_type(...func_get_args()); } }
-if (!function_exists('get_option')) { function get_option() { return \JooosiFonDeps\get_option(...func_get_args()); } }
-if (!function_exists('get_post_meta')) { function get_post_meta() { return \JooosiFonDeps\get_post_meta(...func_get_args()); } }
 if (!function_exists('get_resource_id')) { function get_resource_id() { return \JooosiFonDeps\get_resource_id(...func_get_args()); } }
-if (!function_exists('get_transient')) { function get_transient() { return \JooosiFonDeps\get_transient(...func_get_args()); } }
 if (!function_exists('grapheme_extract')) { function grapheme_extract() { return \JooosiFonDeps\grapheme_extract(...func_get_args()); } }
 if (!function_exists('grapheme_stripos')) { function grapheme_stripos() { return \JooosiFonDeps\grapheme_stripos(...func_get_args()); } }
 if (!function_exists('grapheme_stristr')) { function grapheme_stristr() { return \JooosiFonDeps\grapheme_stristr(...func_get_args()); } }
@@ -87,8 +66,6 @@ if (!function_exists('grapheme_strripos')) { function grapheme_strripos() { retu
 if (!function_exists('grapheme_strrpos')) { function grapheme_strrpos() { return \JooosiFonDeps\grapheme_strrpos(...func_get_args()); } }
 if (!function_exists('grapheme_strstr')) { function grapheme_strstr() { return \JooosiFonDeps\grapheme_strstr(...func_get_args()); } }
 if (!function_exists('grapheme_substr')) { function grapheme_substr() { return \JooosiFonDeps\grapheme_substr(...func_get_args()); } }
-if (!function_exists('home_url')) { function home_url() { return \JooosiFonDeps\home_url(...func_get_args()); } }
-if (!function_exists('is_wp_error')) { function is_wp_error() { return \JooosiFonDeps\is_wp_error(...func_get_args()); } }
 if (!function_exists('mb_check_encoding')) { function mb_check_encoding() { return \JooosiFonDeps\mb_check_encoding(...func_get_args()); } }
 if (!function_exists('mb_chr')) { function mb_chr() { return \JooosiFonDeps\mb_chr(...func_get_args()); } }
 if (!function_exists('mb_convert_case')) { function mb_convert_case() { return \JooosiFonDeps\mb_convert_case(...func_get_args()); } }
@@ -135,31 +112,9 @@ if (!function_exists('mb_trim')) { function mb_trim() { return \JooosiFonDeps\mb
 if (!function_exists('mb_ucfirst')) { function mb_ucfirst() { return \JooosiFonDeps\mb_ucfirst(...func_get_args()); } }
 if (!function_exists('normalizer_is_normalized')) { function normalizer_is_normalized() { return \JooosiFonDeps\normalizer_is_normalized(...func_get_args()); } }
 if (!function_exists('normalizer_normalize')) { function normalizer_normalize() { return \JooosiFonDeps\normalizer_normalize(...func_get_args()); } }
-if (!function_exists('plugin_basename')) { function plugin_basename() { return \JooosiFonDeps\plugin_basename(...func_get_args()); } }
 if (!function_exists('preg_last_error_msg')) { function preg_last_error_msg() { return \JooosiFonDeps\preg_last_error_msg(...func_get_args()); } }
-if (!function_exists('remove_action')) { function remove_action() { return \JooosiFonDeps\remove_action(...func_get_args()); } }
 if (!function_exists('str_contains')) { function str_contains() { return \JooosiFonDeps\str_contains(...func_get_args()); } }
 if (!function_exists('str_ends_with')) { function str_ends_with() { return \JooosiFonDeps\str_ends_with(...func_get_args()); } }
 if (!function_exists('str_starts_with')) { function str_starts_with() { return \JooosiFonDeps\str_starts_with(...func_get_args()); } }
-if (!function_exists('trailingslashit')) { function trailingslashit() { return \JooosiFonDeps\trailingslashit(...func_get_args()); } }
-if (!function_exists('update_option')) { function update_option() { return \JooosiFonDeps\update_option(...func_get_args()); } }
-if (!function_exists('update_post_meta')) { function update_post_meta() { return \JooosiFonDeps\update_post_meta(...func_get_args()); } }
-if (!function_exists('wp_cache_delete')) { function wp_cache_delete() { return \JooosiFonDeps\wp_cache_delete(...func_get_args()); } }
-if (!function_exists('wp_delete_file')) { function wp_delete_file() { return \JooosiFonDeps\wp_delete_file(...func_get_args()); } }
-if (!function_exists('wp_doing_cron')) { function wp_doing_cron() { return \JooosiFonDeps\wp_doing_cron(...func_get_args()); } }
-if (!function_exists('wp_get_attachment_metadata')) { function wp_get_attachment_metadata() { return \JooosiFonDeps\wp_get_attachment_metadata(...func_get_args()); } }
-if (!function_exists('wp_get_attachment_url')) { function wp_get_attachment_url() { return \JooosiFonDeps\wp_get_attachment_url(...func_get_args()); } }
-if (!function_exists('wp_get_environment_type')) { function wp_get_environment_type() { return \JooosiFonDeps\wp_get_environment_type(...func_get_args()); } }
-if (!function_exists('wp_json_encode')) { function wp_json_encode() { return \JooosiFonDeps\wp_json_encode(...func_get_args()); } }
-if (!function_exists('wp_mkdir_p')) { function wp_mkdir_p() { return \JooosiFonDeps\wp_mkdir_p(...func_get_args()); } }
-if (!function_exists('wp_next_scheduled')) { function wp_next_scheduled() { return \JooosiFonDeps\wp_next_scheduled(...func_get_args()); } }
-if (!function_exists('wp_parse_args')) { function wp_parse_args() { return \JooosiFonDeps\wp_parse_args(...func_get_args()); } }
-if (!function_exists('wp_parse_url')) { function wp_parse_url() { return \JooosiFonDeps\wp_parse_url(...func_get_args()); } }
-if (!function_exists('wp_remote_get')) { function wp_remote_get() { return \JooosiFonDeps\wp_remote_get(...func_get_args()); } }
-if (!function_exists('wp_remote_retrieve_body')) { function wp_remote_retrieve_body() { return \JooosiFonDeps\wp_remote_retrieve_body(...func_get_args()); } }
-if (!function_exists('wp_remote_retrieve_response_code')) { function wp_remote_retrieve_response_code() { return \JooosiFonDeps\wp_remote_retrieve_response_code(...func_get_args()); } }
-if (!function_exists('wp_schedule_event')) { function wp_schedule_event() { return \JooosiFonDeps\wp_schedule_event(...func_get_args()); } }
-if (!function_exists('wp_update_attachment_metadata')) { function wp_update_attachment_metadata() { return \JooosiFonDeps\wp_update_attachment_metadata(...func_get_args()); } }
-if (!function_exists('wp_upload_dir')) { function wp_upload_dir() { return \JooosiFonDeps\wp_upload_dir(...func_get_args()); } }
 
 return $loader;
