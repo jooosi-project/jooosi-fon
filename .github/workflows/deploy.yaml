@@ -1,0 +1,287 @@
+name: Deploy Free and Pro editions
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+env:
+  COMPOSER_ROOT_VERSION: dev-master
+
+jobs:
+  release:
+    if: github.repository == 'jooosi-project/jooosi-fon'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve edition versions
+        id: versions
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+
+          if [[ ! "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "The release tag must be a semantic version such as 2.1.0 or v2.1.0." >&2
+            exit 1
+          fi
+
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+          patch="${BASH_REMATCH[3]}"
+
+          if (( major < 1 )); then
+            echo "The Pro major version must be at least 1 so a Free version can be derived." >&2
+            exit 1
+          fi
+
+          pro_version="${major}.${minor}.${patch}"
+          free_version="$((major - 1)).${minor}.${patch}"
+
+          echo "pro=${pro_version}" >> "$GITHUB_OUTPUT"
+          echo "free=${free_version}" >> "$GITHUB_OUTPUT"
+          echo "PRO_VERSION=${pro_version}" >> "$GITHUB_ENV"
+          echo "FREE_VERSION=${free_version}" >> "$GITHUB_ENV"
+
+      - uses: pnpm/setup@v2
+        with:
+          runtime: node@24
+          cache: true
+          install: false
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend assets
+        run: pnpm run build
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+          tools: composer:v2
+
+      - name: Extract release notes
+        id: changelog
+        shell: bash
+        run: |
+          {
+            echo "content<<EOF"
+            node deploy/extract-changelog.mjs "$PRO_VERSION"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update WordPress.org changelog
+        run: node deploy/update-readme-changelog.mjs
+
+      - name: Prepare Pro source
+        shell: bash
+        run: |
+          mkdir -p jooosi-fon-deploy
+          rsync -a \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='jooosi-fon-deploy' \
+            --exclude='jooosi-fon-*-prefixed' \
+            --exclude='dist-branch' \
+            --exclude='dist-free-branch' \
+            ./ jooosi-fon-deploy/
+
+          composer install \
+            --working-dir=jooosi-fon-deploy \
+            --no-dev \
+            --classmap-authoritative \
+            --no-interaction \
+            --prefer-dist \
+            --ansi
+
+      - name: Scope Pro edition dependencies
+        run: bash deploy/deploy-scoped.sh jooosi-fon-deploy jooosi-fon-pro-prefixed --keep-source
+
+      - name: Prepare Pro artifact
+        shell: bash
+        run: |
+          node deploy/add-pro-update-uri.mjs jooosi-fon-pro-prefixed
+
+          mkdir -p jooosi-fon-pro-prefixed-filtered
+          rsync -a \
+            --exclude='.*' \
+            --exclude-from=.distignore \
+            jooosi-fon-pro-prefixed/ \
+            jooosi-fon-pro-prefixed-filtered/
+          rm -rf jooosi-fon-pro-prefixed
+          mv jooosi-fon-pro-prefixed-filtered jooosi-fon-pro-prefixed
+
+      - name: Verify Pro edition
+        shell: bash
+        run: |
+          pro=jooosi-fon-pro-prefixed
+          update_uri='https://jooo.si'
+
+          grep -Fq "* Version:             ${PRO_VERSION}" "$pro/jooosi-fon.php"
+          grep -Fq "public const VERSION = '${PRO_VERSION}';" "$pro/constant.php"
+          grep -Fq "* Update URI:        ${update_uri}" "$pro/jooosi-fon.php"
+          grep -Fq 'use EasyDigitalDownloads\Updater\Registry;' "$pro/src/Plugin.php"
+          grep -Fq "'wp_override' => true" "$pro/src/Licensing/Manager.php"
+          test -f "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
+          grep -Fq "add_action( 'after_setup_theme', array( '\\EasyDigitalDownloads\\Updater\\Versions'" \
+            "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
+
+      - name: Publish Pro build to dist branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" dist-branch
+          cd dist-branch
+          git fetch origin dist || true
+          git checkout dist 2>/dev/null || git checkout --orphan dist
+          git rm -rf . 2>/dev/null || true
+          git clean -fxd
+          cp -a ../jooosi-fon-pro-prefixed/. .
+          git add --all
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --cached --quiet; then
+            echo "The dist branch already matches Pro ${PRO_VERSION}."
+          else
+            git commit -m "Build Pro ${PRO_VERSION}"
+            git push origin dist
+          fi
+
+      - name: Prepare Free edition
+        shell: bash
+        run: |
+          rm -rf \
+            jooosi-fon-deploy/src/Builder/Beaver \
+            jooosi-fon-deploy/src/Builder/Blocksy \
+            jooosi-fon-deploy/src/Builder/Breakdance \
+            jooosi-fon-deploy/src/Builder/Bricks \
+            jooosi-fon-deploy/src/Builder/Cwicly \
+            jooosi-fon-deploy/src/Builder/Divi \
+            jooosi-fon-deploy/src/Builder/Etch \
+            jooosi-fon-deploy/src/Builder/FunnelKit \
+            jooosi-fon-deploy/src/Builder/Greenshift \
+            jooosi-fon-deploy/src/Builder/Oxygen \
+            jooosi-fon-deploy/src/Builder/SliderRevolution \
+            jooosi-fon-deploy/src/Builder/Spectra \
+            jooosi-fon-deploy/src/Builder/YellowPencil \
+            jooosi-fon-deploy/src/Builder/Zion
+
+          node deploy/decrease-version.mjs jooosi-fon-deploy
+          composer remove \
+            --working-dir=jooosi-fon-deploy \
+            easy-digital-downloads/edd-sl-sdk \
+            --update-no-dev \
+            --classmap-authoritative \
+            --no-interaction \
+            --no-progress \
+            --ansi
+
+      - name: Scope Free edition dependencies
+        run: bash deploy/deploy-scoped.sh jooosi-fon-deploy jooosi-fon-free-prefixed
+
+      - name: Prepare Free artifact
+        shell: bash
+        run: |
+          mkdir -p jooosi-fon-free-prefixed-filtered
+          rsync -a \
+            --exclude='.*' \
+            --exclude-from=.distignore \
+            jooosi-fon-free-prefixed/ \
+            jooosi-fon-free-prefixed-filtered/
+          rm -rf jooosi-fon-free-prefixed
+          mv jooosi-fon-free-prefixed-filtered jooosi-fon-free-prefixed
+
+      - name: Verify Free edition
+        shell: bash
+        run: |
+          free=jooosi-fon-free-prefixed
+
+          grep -Fq "* Version:             ${FREE_VERSION}" "$free/jooosi-fon.php"
+          grep -Fq "public const VERSION = '${FREE_VERSION}';" "$free/constant.php"
+          grep -Fq "Stable tag: ${FREE_VERSION}" "$free/readme.txt"
+
+          if grep -Eiq '^[[:space:]]*\*[[:space:]]*Update URI:' "$free/jooosi-fon.php"; then
+            echo "The Free artifact must not contain a custom Update URI." >&2
+            exit 1
+          fi
+
+          if [[ -d "$free/vendor/easy-digital-downloads/edd-sl-sdk" ]]; then
+            echo "The Free artifact must not contain the EDD Software Licensing SDK." >&2
+            exit 1
+          fi
+
+          for directory in Beaver Blocksy Breakdance Bricks Cwicly Divi Etch FunnelKit Greenshift Oxygen SliderRevolution Spectra YellowPencil Zion; do
+            if [[ -d "$free/src/Builder/$directory" ]]; then
+              echo "The Free artifact contains Pro builder integration: $directory" >&2
+              exit 1
+            fi
+          done
+
+      - name: Create Free plugin archive
+        shell: bash
+        run: |
+          # The archive root intentionally keeps the existing WordPress.org directory slug.
+          mkdir -p jooosi-fon-free-zip/yabe-webfont
+          cp -a jooosi-fon-free-prefixed/. jooosi-fon-free-zip/yabe-webfont/
+          cd jooosi-fon-free-zip
+          zip -qr "../jooosi-fon-${FREE_VERSION}-free.zip" yabe-webfont -x "*.git*" "*.DS_Store*"
+
+      - name: Upload Free plugin artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: jooosi-fon-${{ steps.versions.outputs.free }}-free
+          path: jooosi-fon-${{ steps.versions.outputs.free }}-free.zip
+
+      - name: Publish Free build to dist-free branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" dist-free-branch
+          cd dist-free-branch
+          git fetch origin dist-free || true
+          git checkout dist-free 2>/dev/null || git checkout --orphan dist-free
+          git rm -rf . 2>/dev/null || true
+          git clean -fxd
+          cp -a ../jooosi-fon-free-prefixed/. .
+          git add --all
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --cached --quiet; then
+            echo "The dist-free branch already matches Free ${FREE_VERSION}."
+          else
+            git commit -m "Build Free ${FREE_VERSION}"
+            git push origin dist-free
+          fi
+
+      - name: Publish Free edition to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.WORDPRESS_ORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WORDPRESS_ORG_SVN_PASSWORD }}
+          # WordPress.org directory slug; intentionally not part of the product rename.
+          SLUG: ${{ vars.WORDPRESS_ORG_SLUG || 'jooosi-fon' }}
+          BUILD_DIR: jooosi-fon-free-prefixed
+          VERSION: ${{ steps.versions.outputs.free }}
+          ASSETS_DIR: .wordpress-org
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.content }}
+          files: jooosi-fon-${{ steps.versions.outputs.free }}-free.zip
+          draft: false
+          prerelease: false

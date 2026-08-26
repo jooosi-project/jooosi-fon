@@ -1,0 +1,19 @@
+body.toplevel_page_jooosi_fon #wpcontent {
+    padding-left: 0 !important;
+}
+
+body.toplevel_page_jooosi_fon #wpbody-content {
+    padding-bottom: 0 !important;
+}
+
+body.toplevel_page_jooosi_fon #wpfooter {
+    display: none;
+}
+
+body.toplevel_page_jooosi_fon .wrap {
+    margin: 0;
+}
+
+body.toplevel_page_jooosi_fon .update-nag {
+    display: none;
+}
