@@ -227,7 +227,7 @@ function UtilityMenu({ mobile = false }: { mobile?: boolean }) {
             href: 'https://fon.jooo.si/docs?utm_source=wordpress-plugins&utm_medium=plugin-menu&utm_campaign=jooosi-fon&utm_id=pro-version',
             icon: BookOpenIcon,
         },
-        { label: __('Support', 'jooosi-fon'), href: 'https://rosua.org/support-portal', icon: HeadphonesIcon },
+        { label: __('Support', 'jooosi-fon'), href: 'https://jooo.si/account/?view=support-tickets', icon: HeadphonesIcon },
         { label: __('Community', 'jooosi-fon'), href: 'https://www.facebook.com/groups/1142662969627943', icon: UsersIcon },
     ];
 
