@@ -7,6 +7,9 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- Prevent scoped release builds from generating broken proxies for WordPress functions declared by test stubs.
+
 ## [2.1.0] - 2026-08-26
 
 ### Added

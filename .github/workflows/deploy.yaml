@@ -85,9 +85,13 @@ jobs:
         shell: bash
         run: |
           mkdir -p jooosi-fon-deploy
+          # Test stubs declare WordPress functions such as dbDelta(). If they
+          # are scoped, PHP-Scoper emits aliases whose implementations are
+          # later removed from the release artifact by .distignore.
           rsync -a \
             --exclude='.git' \
             --exclude='node_modules' \
+            --exclude='tests' \
             --exclude='vendor' \
             --exclude='jooosi-fon-deploy' \
             --exclude='jooosi-fon-*-prefixed' \

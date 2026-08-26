@@ -11,6 +11,11 @@ if [[ -z "$deploy_directory" || -z "$result_directory" || "$deploy_directory" ==
     exit 1
 fi
 
+if [[ -d "$deploy_directory/tests" ]]; then
+    echo "Refusing to scope a release source that contains test function stubs: $deploy_directory/tests" >&2
+    exit 1
+fi
+
 rm -rf "$result_directory"
 rm -rf "$deploy_directory/deploy/php-scoper-wordpress-excludes-master"
 
@@ -34,6 +39,12 @@ php -d memory_limit=-1 php-scoper.phar add-prefix \
 rm -f php-scoper.phar "$result_directory/php-scoper.phar"
 composer dump-autoload --working-dir "$result_directory" --ansi --no-dev --classmap-authoritative
 php deploy/patch-scoper-autoload.php "$result_directory/vendor/scoper-autoload.php"
+
+if grep -Fq 'JooosiFonDeps\dbDelta' "$result_directory/vendor/scoper-autoload.php"; then
+    echo "The scoped autoloader contains a broken dbDelta() proxy." >&2
+    exit 1
+fi
+
 rm -rf "$deploy_directory/deploy/php-scoper-wordpress-excludes-master"
 
 if [[ "$source_policy" != "--keep-source" ]]; then
