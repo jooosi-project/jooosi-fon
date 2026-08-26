@@ -26,7 +26,7 @@ class JOOOSI_FON
     /**
      * @var string
      */
-    public const VERSION = '2.1.0';
+    public const VERSION = '2.1.1';
 
     /**
      * @var string

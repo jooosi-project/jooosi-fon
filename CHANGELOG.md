@@ -7,6 +7,8 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-08-26
+
 ### Fixed
 - Prevent scoped release builds from generating broken proxies for WordPress functions declared by test stubs.
 
@@ -468,7 +470,8 @@ and the Pro release major version is one higher than the matching Free release.
 ### Added
 - Initial release.
 
-[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...HEAD
+[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.1...HEAD
+[2.1.1]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...2.1.0
 [2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.114...2.1.0
 [2.0.114]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.100...2.0.114
