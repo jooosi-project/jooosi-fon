@@ -130,9 +130,9 @@ jobs:
           grep -Fq "public const VERSION = '${PRO_VERSION}';" "$pro/constant.php"
           grep -Fq "* Update URI:        ${update_uri}" "$pro/jooosi-fon.php"
           grep -Fq 'use EasyDigitalDownloads\Updater\Registry;' "$pro/src/Plugin.php"
-          grep -Fq "'wp_override' => true" "$pro/src/Licensing/Manager.php"
+          grep -Eq "'wp_override'[[:space:]]*=>[[:space:]]*\\\\?true" "$pro/src/Licensing/Manager.php"
           test -f "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
-          grep -Fq "add_action( 'after_setup_theme', array( '\\EasyDigitalDownloads\\Updater\\Versions'" \
+          grep -Fq "add_action( 'after_setup_theme', array( '\\\\EasyDigitalDownloads\\\\Updater\\\\Versions'" \
             "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
 
       - name: Publish Pro build to dist branch

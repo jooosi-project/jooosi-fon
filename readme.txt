@@ -38,23 +38,23 @@ The font must be available for use across different platforms. Jooosi Fon is fam
 * [Classic Editor](https://wordpress.org/plugins/classic-editor/)
 * [Elementor](https://be.elementor.com/visit/?bta=209150&brand=elementor)
 * [GeneratePress](https://generatepress.com/?ref=7954)
-* [Gutenberg Blocks and Site Editor](https://wordpress.org/gutenberg)
-* [Kadence WP](https://kadencewp.com)
-* [Pinegrow](https://pinegrow.com/wordpress)
+* [Gutenberg Blocks and Site Editor](https://wordpress.org/gutenberg/?ref=windpress)
+* [Kadence WP](https://kadencewp.com/?ref=jooosi)
+* [Pinegrow](https://pinegrow.com/wordpress?ref=jooosi)
 * [Beaver Builder](https://www.wpbeaverbuilder.com/) **[Pro]**
 * [Blocksy](https://creativethemes.com/blocksy) **[Pro]**
 * [Breakdance](https://breakdance.com/ref/165/) **[Pro]**
-* [Bricks](https://bricksbuilder.io/) **[Pro]**
+* [Bricks](https://bricksbuilder.io/?ref=jooosi) **[Pro]**
 * [Cwicly](https://cwicly.com/?ref=suabahasa) **[Pro]**
 * [Divi](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) **[Pro]**
-* [Etch](https://etchwp.com) **[Pro]**
+* [Etch](https://etchwp.com?aff=bce0d1ab) **[Pro]**
 * [FunnelKit/SlingBlocks](https://wordpress.org/plugins/slingblocks/) **[Pro]**
-* [Greenshift](https://greenshiftwp.com/) **[Pro]**
-* [Oxygen](https://oxygenbuilder.com/) **[Pro]**
+* [Greenshift](https://shop.greenshiftwp.com/?from=3679) **[Pro]**
+* [Oxygen](https://oxygenbuilder.com/ref/12/) **[Pro]**
 * [Slider Revolution](https://www.sliderrevolution.com/) **[Pro]**
 * [Spectra](https://wpspectra.com/) **[Pro]**
 * [YellowPencil](https://yellowpencil.waspthemes.com/) **[Pro]**
-* [Zion Builder](https://zionbuilder.io/) **[Pro]**
+* [Zion Builder](https://zionbuilder.io/?ref=jooosi) **[Pro]**
 
 Visit [our website](https://fon.jooo.si) for more information.
 
