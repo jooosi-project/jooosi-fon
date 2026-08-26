@@ -77,6 +77,7 @@ Visit [our website](https://fon.jooo.si) for more information.
 **Fixed**
 
 * Prevent scoped release builds from generating broken proxies for WordPress functions declared by test stubs.
+* Always refresh the font cache when it is regenerated and include the generation time in the stylesheet.
 
 = 2.1.0 - 2026-08-26 =
 

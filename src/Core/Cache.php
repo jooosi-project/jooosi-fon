@@ -160,31 +160,28 @@ class Cache
         try {
             $artifacts = self::buildArtifacts();
             $payload = sprintf(
-                "/*\n! %s v%s\n*/\n\n%s",
+                "/*\n! %s v%s | %s\n*/\n\n%s",
                 Common::plugin_data('Name'),
                 JOOOSI_FON::VERSION,
+                date('Y-m-d H:i:s', time()),
                 $artifacts['css']
             );
             $cssPath = self::get_cache_path(self::CSS_CACHE_FILE);
             $preloadPath = self::get_cache_path(self::PRELOAD_HTML_FILE);
-            $changed = ! self::contentsMatch($cssPath, $payload)
-                || ! self::contentsMatch($preloadPath, $artifacts['preload']);
 
-            if ($changed) {
-                self::publishArtifacts($payload, $artifacts['preload'], $cssPath, $preloadPath);
-                $this->purge_cache_plugin();
-            }
+            self::publishArtifacts($payload, $artifacts['preload'], $cssPath, $preloadPath);
+            $this->purge_cache_plugin();
 
             self::updateBuildStatus([
                 'state' => 'succeeded',
                 'completed_at' => time(),
                 'hash' => hash('sha256', $payload . "\0" . $artifacts['preload']),
-                'changed' => $changed,
+                'changed' => true,
                 'warnings' => $artifacts['warnings'],
                 'error' => '',
             ]);
 
-            do_action('a!jooosi/fon/core/cache:build_succeeded', $changed, $artifacts['warnings']);
+            do_action('a!jooosi/fon/core/cache:build_succeeded', true, $artifacts['warnings']);
         } catch (\Throwable $throwable) {
             $message = sprintf('Failed to build the font cache: %s', $throwable->getMessage());
             self::updateBuildStatus([
@@ -403,17 +400,6 @@ class Cache
         }
 
         return $lock;
-    }
-
-    private static function contentsMatch(string $path, string $expected): bool
-    {
-        if (! is_readable($path)) {
-            return false;
-        }
-
-        $contents = file_get_contents($path);
-
-        return is_string($contents) && hash_equals(hash('sha256', $expected), hash('sha256', $contents));
     }
 
     private static function publishArtifacts(string $css, string $preload, string $cssPath, string $preloadPath): void

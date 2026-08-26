@@ -40,7 +40,10 @@
         "check-ecs": "vendor/bin/ecs check --ansi",
         "fix-ecs": "vendor/bin/ecs check --fix --ansi",
         "test-api": "@php tests/api-support.php",
-        "test-cache": "@php tests/cache-renderer.php",
+        "test-cache": [
+            "@php tests/cache-renderer.php",
+            "@php tests/cache-build.php"
+        ],
         "test-license": [
             "@php tests/licensing-manager.php normal",
             "@php tests/licensing-manager.php late"
