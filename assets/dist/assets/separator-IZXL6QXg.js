@@ -1,0 +1,1 @@
+import{j as e,r as t}from"./button-BhAQo6Sy.js";import{t as n}from"./Separator-D9XfIgMe.js";var r=t();function i({className:t,orientation:i=`horizontal`,...a}){return(0,r.jsx)(n,{"data-slot":`separator`,orientation:i,className:e(`shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch`,t),...a})}export{i as t};

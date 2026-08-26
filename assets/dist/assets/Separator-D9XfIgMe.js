@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{P as t,W as n}from"./button-BhAQo6Sy.js";var r=e(n(),1).forwardRef(function(e,n){let{className:r,render:i,orientation:a=`horizontal`,style:o,...s}=e;return t(`div`,e,{state:{orientation:a},ref:n,props:[{role:`separator`,"aria-orientation":a},s]})});export{r as t};

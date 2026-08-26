@@ -1,0 +1,67 @@
+{
+    "name": "jooosi\/fon",
+    "description": "Self-hosted Google Fonts, Adobe Fonts, and custom font management for WordPress.",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "repositories": {
+        "edd-sl-sdk": {
+            "type": "vcs",
+            "url": "https:\/\/github.com\/awesomemotive\/edd-sl-sdk"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "JooosiFon\\": "src\/"
+        },
+        "files": [
+            "constant.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "complete-check": [
+            "@check-ecs",
+            "@phpstan",
+            "@test-api",
+            "@test-cache",
+            "@test-license",
+            "@test-migrations",
+            "@test-upgrades",
+            "phpunit"
+        ],
+        "phpstan": "vendor\/bin\/phpstan analyse --ansi --error-format symplify",
+        "rector": "vendor\/bin\/rector process --ansi",
+        "check-ecs": "vendor\/bin\/ecs check --ansi",
+        "fix-ecs": "vendor\/bin\/ecs check --fix --ansi",
+        "test-api": "@php tests\/api-support.php",
+        "test-cache": "@php tests\/cache-renderer.php",
+        "test-license": [
+            "@php tests\/licensing-manager.php normal",
+            "@php tests\/licensing-manager.php late"
+        ],
+        "test-migrations": [
+            "@php tests\/migration-sources.php",
+            "@php tests\/database-migrations.php"
+        ],
+        "test-upgrades": "@php tests\/legacy-rebrand-upgrade.php"
+    },
+    "require-dev": {
+        "rector\/rector": "^0.17.1",
+        "symplify\/easy-coding-standard": "^11.3"
+    },
+    "require": {
+        "php": ">=7.4",
+        "hidehalo\/nanoid-php": "^1.1",
+        "nabasa\/vp-wp": "^0.3.0",
+        "sabberworm\/php-css-parser": "^8.8",
+        "symfony\/finder": "^5.4",
+        "symfony\/property-access": "^5.4",
+        "symfony\/stopwatch": "^5.4"
+    }
+}
