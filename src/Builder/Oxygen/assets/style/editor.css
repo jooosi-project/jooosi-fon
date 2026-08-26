@@ -1,0 +1,14 @@
+/* div.oxygen-select-box-option.ng-binding.ng-scope[ng-repeat*="typeKitFonts"], */
+div.oxygen-select-box-option.ng-binding.ng-scope[ng-repeat*="elegantCustomFonts"] {
+    align-items: center;
+}
+
+/* div.oxygen-select-box-option.ng-binding.ng-scope[ng-repeat*="typeKitFonts"]:before, */
+div.oxygen-select-box-option.ng-binding.ng-scope[ng-repeat*="elegantCustomFonts"]:before {
+    content: "Jooosi Fon";
+    color: #fff;
+    background-color: #26a0f5;
+    padding: 2px 5px;
+    margin-right: 5px;
+    border-radius: 2px;
+}
