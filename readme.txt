@@ -38,7 +38,7 @@ The font must be available for use across different platforms. Jooosi Fon is fam
 * [Classic Editor](https://wordpress.org/plugins/classic-editor/)
 * [Elementor](https://be.elementor.com/visit/?bta=209150&brand=elementor)
 * [GeneratePress](https://generatepress.com/?ref=7954)
-* [Gutenberg Blocks and Site Editor](https://wordpress.org/gutenberg/?ref=windpress)
+* [Gutenberg Blocks and Site Editor](https://wordpress.org/gutenberg/?ref=jooosi)
 * [Kadence WP](https://kadencewp.com/?ref=jooosi)
 * [Pinegrow](https://pinegrow.com/wordpress?ref=jooosi)
 * [Beaver Builder](https://www.wpbeaverbuilder.com/) **[Pro]**
@@ -118,7 +118,7 @@ Visit [our website](https://fon.jooo.si) for more information.
 
 **Added**
 
-* [Etch](https://etchwp.com) integration **[Pro]**. Type "ywf" on the Etch's CSS editor to see the font list.
+* [Etch](https://etchwp.com?aff=bce0d1ab) integration **[Pro]**. Type "ywf" on the Etch's CSS editor to see the font list.
 
 **Changed**
 
@@ -340,7 +340,7 @@ Visit [our website](https://fon.jooo.si) for more information.
 
 **Added**
 
-* [Pinegrow](https://pinegrow.com/wordpress) integration **[Pro]**
+* [Pinegrow](https://pinegrow.com/wordpress?ref=jooosi) integration **[Pro]**
 
 = 2.0.32 - 2023-06-15 =
 
@@ -499,7 +499,7 @@ Visit [our website](https://fon.jooo.si) for more information.
 
 **Added**
 
-* [Kadence WP](https://kadencewp.com) integration
+* [Kadence WP](https://kadencewp.com/?ref=jooosi) integration
 
 = 2.0.10 - 2023-03-02 =
 
@@ -555,7 +555,7 @@ Visit [our website](https://fon.jooo.si) for more information.
 
 **Added**
 
-* [Greenshift](https://greenshiftwp.com/) integration **[Pro]**
+* [Greenshift](https://shop.greenshiftwp.com/?from=3679) integration **[Pro]**
 
 **Changed**
 
@@ -603,14 +603,14 @@ Visit [our website](https://fon.jooo.si) for more information.
 * Custom fonts management
 * Editable imported Google Fonts
 * [Beaver Builder](https://www.wpbeaverbuilder.com/) integration **[Pro]**
-* [Bricks](https://bricksbuilder.io/) integration **[Pro]**
+* [Bricks](https://bricksbuilder.io/?ref=jooosi) integration **[Pro]**
 * [Cwicly](https://cwicly.com/?ref=suabahasa) integration **[Pro]**
 * [Classic Editor](https://wordpress.org/plugins/classic-editor/) integration
 * [Elementor](https://be.elementor.com/visit/?bta=209150&brand=elementor) integration
 * [GeneratePress](https://generatepress.com/?ref=7954) integration
-* [Gutenberg](https://wordpress.org/gutenberg) integration
-* [Oxygen](https://oxygenbuilder.com/) integration **[Pro]**
-* [Zion Builder](https://zionbuilder.io/) integration **[Pro]**
+* [Gutenberg](https://wordpress.org/gutenberg/?ref=jooosi) integration
+* [Oxygen](https://oxygenbuilder.com/ref/12/) integration **[Pro]**
+* [Zion Builder](https://zionbuilder.io/?ref=jooosi) integration **[Pro]**
 
 **Changed**
 
