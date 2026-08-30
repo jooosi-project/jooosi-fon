@@ -19,18 +19,9 @@ jobs:
           token: ${{ github.token }}
           ref: master
 
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x # Run with latest stable Deno.
-          cache: true
-
-      - name: Install dependencies
-        working-directory: deploy/webfonts
-        run: deno install
-
       - name: Update webfont data
         working-directory: deploy/google-fonts-cache
-        run: deno run -A main.ts
+        run: node main.mjs
         env:
           GOOGLE_FONTS_API_KEY: ${{ secrets.GOOGLE_FONTS_API_KEY }}
 

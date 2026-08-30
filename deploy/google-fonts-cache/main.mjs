@@ -1,55 +1,19 @@
-import { ProgressBar } from "@std/cli/unstable-progress-bar";
-
-interface MetadataFont {
-  family: string;
-  displayName?: string;
-  category: string;
-  dateAdded: string;
-  lastModified: string;
-  popularity: number;
-  designers: string[];
-  subsets: string[];
-  axes: unknown[];
-  fonts: Record<string, {
-    url?: string;
-    unicodeRange?: string;
-    [key: string]: unknown;
-  }>;
-}
-
-interface WebfontItem {
-  family: string;
-  variants: string[];
-  version: string;
-}
-
-interface Font {
-  slug: string;
-  addedAt: string;
-  axes: any[];
-  category: string;
-  designers: string[];
-  displayName?: string;
-  family: string;
-  modifiedAt: string;
-  subsets: string[];
-  variants: string[];
-  updatedAt: string;
-  popularity: number;
-  version: string;
-  isSupportVariable: boolean;
-}
+import { writeFile } from "node:fs/promises";
 
 // Helper to slugify font family names
-function slugify(str: string): string {
+function slugify(str) {
   return str
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 }
 
-async function saveFontsData(fonts: Font[]): Promise<void> {
-  await Deno.writeTextFile("../../google-fonts.json", JSON.stringify(fonts));
+async function saveFontsData(fonts) {
+  await writeFile(
+    new URL("../../google-fonts.json", import.meta.url),
+    JSON.stringify(fonts),
+    "utf8",
+  );
 }
 
 // Fetch Google Fonts metadata
@@ -64,11 +28,11 @@ async function fetchMetadata() {
   }
 
   const metadataContent = await res.json();
-  return metadataContent.familyMetadataList as MetadataFont[];
+  return metadataContent.familyMetadataList;
 }
 
 // Fetch Google Fonts webfont data
-async function fetchWebfont(webfontApiKey: string) {
+async function fetchWebfont(webfontApiKey) {
   console.log("Fetching fonts from Google Fonts API (webfont)...");
 
   const res = await fetch(
@@ -81,14 +45,16 @@ async function fetchWebfont(webfontApiKey: string) {
   }
 
   const webfontContent = await res.json();
-  const items: Record<string, WebfontItem> = {};
+  const items = {};
 
   for (const item of webfontContent.items) {
-    item.variants = item.variants.map((v: string) => {
-      if (v === "regular") return "400";
-      if (v === "italic") return "400i";
-      if (/^(\d+)(italic)$/.test(v)) return v.replace("italic", "i");
-      return v;
+    item.variants = item.variants.map((variant) => {
+      if (variant === "regular") return "400";
+      if (variant === "italic") return "400i";
+      if (/^(\d+)(italic)$/.test(variant)) {
+        return variant.replace("italic", "i");
+      }
+      return variant;
     });
     items[item.family] = item;
   }
@@ -97,39 +63,29 @@ async function fetchWebfont(webfontApiKey: string) {
 }
 
 async function main() {
-  const webfontApiKey = Deno.env.get("GOOGLE_FONTS_API_KEY");
+  const webfontApiKey = process.env.GOOGLE_FONTS_API_KEY;
   if (!webfontApiKey) {
     console.error("GOOGLE_FONTS_API_KEY environment variable is not set.");
-    Deno.exit(1);
+    return 1;
   }
 
   try {
     const metadataFonts = await fetchMetadata();
     const webfont = await fetchWebfont(webfontApiKey);
 
-    console.log(
-      `Found ${metadataFonts.length} fonts.`,
-    );
+    console.log(`Found ${metadataFonts.length} fonts.`);
 
     if (metadataFonts.length === 0) {
       console.warn("No fonts found in the metadata.");
-      Deno.exit(0);
+      return 0;
     }
 
     console.log("Processing fonts data...");
 
-    // Initialize an array to hold the processed font data
-    const fonts: Font[] = [];
+    const fonts = [];
 
-    const bar = new ProgressBar({
-      max: metadataFonts.length,
-      fmt(x) {
-        return `[${x.styledTime}] [${x.progressBar}] [${x.value}/${x.max} fonts]`;
-      },
-    });
-
-    for (const metadataFont of metadataFonts) {
-      const font: Font = {
+    for (const [index, metadataFont] of metadataFonts.entries()) {
+      const font = {
         slug: slugify(metadataFont.family),
         addedAt: metadataFont.dateAdded,
         axes: metadataFont.axes,
@@ -146,18 +102,19 @@ async function main() {
         isSupportVariable: metadataFont.axes.length > 0,
       };
 
-      for (const k in metadataFont.fonts) {
-        if (webfont[metadataFont.family]?.variants.includes(k)) {
-          font.variants.push(k);
+      for (const variant of Object.keys(metadataFont.fonts)) {
+        if (webfont[metadataFont.family]?.variants.includes(variant)) {
+          font.variants.push(variant);
         }
       }
 
       fonts.push(font);
 
-      bar.value += 1;
+      const processed = index + 1;
+      if (processed === metadataFonts.length || processed % 100 === 0) {
+        console.log(`Processed ${processed}/${metadataFonts.length} fonts.`);
+      }
     }
-
-    await bar.stop();
 
     console.log("Fonts data processed. Saving...");
 
@@ -169,15 +126,10 @@ async function main() {
     } else {
       console.error(String(error));
     }
-    Deno.exit(1);
+    return 1;
   }
 
-  Deno.exit(0);
+  return 0;
 }
 
-if (import.meta.main) {
-  main().catch((error) => {
-    console.error("Fatal error:", error);
-    Deno.exit(1);
-  });
-}
+process.exitCode = await main();
