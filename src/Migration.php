@@ -65,7 +65,7 @@ final class Migration
     private function maybe_upgrade(): void
     {
         $installedVersion = get_option(JOOOSI_FON::WP_OPTION . '_version', \false);
-        if (!is_string($installedVersion) || version_compare($installedVersion, JOOOSI_FON::VERSION, '>=')) {
+        if (is_string($installedVersion) && version_compare($installedVersion, JOOOSI_FON::VERSION, '>=')) {
             return;
         }
         $this->upgrade();

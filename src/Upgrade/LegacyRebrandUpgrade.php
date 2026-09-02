@@ -12,6 +12,7 @@ declare (strict_types=1);
 namespace JooosiFon\Upgrade;
 
 use JooosiFonDeps\JOOOSI_FON;
+use JooosiFon\Database\FontTable;
 /**
  * One-time filesystem and attachment migration for the Jooosi Fon rebrand.
  *
@@ -27,6 +28,20 @@ final class LegacyRebrandUpgrade
     private const UPLOAD_DIRECTORY = 'jooosi-fon';
     private const FONT_DIRECTORY = 'fonts';
     private const CACHE_DIRECTORY = 'cache';
+    /**
+     * @return array{complete: bool, filesystem_complete: bool, font_table_available: bool, legacy_data_available: bool, current_data_available: bool, cleanup_requested: bool, cleanup_complete: bool}
+     */
+    public function status(): array
+    {
+        $uploads = wp_upload_dir();
+        $baseDirectory = is_array($uploads) ? rtrim((string) ($uploads['basedir'] ?? ''), '/\\') : '';
+        $legacyRoot = $baseDirectory !== '' ? $baseDirectory . '/' . self::LEGACY_UPLOAD_DIRECTORY : '';
+        $root = $baseDirectory !== '' ? $baseDirectory . '/' . self::UPLOAD_DIRECTORY : '';
+        $filesystemComplete = get_option(self::COMPLETION_OPTION, \false) !== \false;
+        $fontTableAvailable = FontTable::exists();
+        $cleanupComplete = get_option(self::CLEANUP_OPTION, \false) !== \false;
+        return ['complete' => $filesystemComplete && $fontTableAvailable, 'filesystem_complete' => $filesystemComplete, 'font_table_available' => $fontTableAvailable, 'legacy_data_available' => $legacyRoot !== '' && (is_dir($legacyRoot) || is_file($legacyRoot) || is_link($legacyRoot)), 'current_data_available' => $root !== '' && (is_dir($root) || is_file($root) || is_link($root)), 'cleanup_requested' => $this->shouldDeleteLegacyData(), 'cleanup_complete' => $cleanupComplete];
+    }
     public function run(): void
     {
         if (get_option(self::COMPLETION_OPTION, \false) !== \false) {

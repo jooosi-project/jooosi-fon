@@ -289,6 +289,7 @@ class ComposerStaticInitaed462212d3f4c500a68ea77cbd9569f
         'JooosiFon\\Core\\Cache\\FontPreloadRenderer' => __DIR__ . '/../..' . '/src/Core/Cache/FontPreloadRenderer.php',
         'JooosiFon\\Core\\Frontpage' => __DIR__ . '/../..' . '/src/Core/Frontpage.php',
         'JooosiFon\\Core\\Runtime' => __DIR__ . '/../..' . '/src/Core/Runtime.php',
+        'JooosiFon\\Database\\FontTable' => __DIR__ . '/../..' . '/src/Database/FontTable.php',
         'JooosiFon\\Database\\Migration\\AbstractMigration' => __DIR__ . '/../..' . '/src/Database/Migration/AbstractMigration.php',
         'JooosiFon\\Database\\Migration\\Exception\\AbortMigration' => __DIR__ . '/../..' . '/src/Database/Migration/Exception/AbortMigration.php',
         'JooosiFon\\Database\\Migration\\Exception\\MigrationException' => __DIR__ . '/../..' . '/src/Database/Migration/Exception/MigrationException.php',

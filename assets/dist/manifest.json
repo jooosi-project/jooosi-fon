@@ -252,7 +252,7 @@
     "isDynamicEntry": true
   },
   "resources/main.tsx": {
-    "file": "assets/app-DBvu87Jj.js",
+    "file": "assets/app-Di4tDCA1.js",
     "name": "app",
     "src": "resources/main.tsx",
     "isEntry": true,
@@ -283,7 +283,7 @@
     ]
   },
   "resources/pages/about-page.tsx": {
-    "file": "assets/about-page-iBtbAoym.js",
+    "file": "assets/about-page-BOF-0jOE.js",
     "name": "about-page",
     "src": "resources/pages/about-page.tsx",
     "isDynamicEntry": true,
@@ -299,7 +299,7 @@
     ]
   },
   "resources/pages/custom-font-editor-page.tsx": {
-    "file": "assets/custom-font-editor-page-Cx9gcfD-.js",
+    "file": "assets/custom-font-editor-page-CLa_Hmv3.js",
     "name": "custom-font-editor-page",
     "src": "resources/pages/custom-font-editor-page.tsx",
     "isDynamicEntry": true,
@@ -355,7 +355,7 @@
     ]
   },
   "resources/pages/google-font-editor-page.tsx": {
-    "file": "assets/google-font-editor-page-ml1XmaTN.js",
+    "file": "assets/google-font-editor-page-B0uFdvqx.js",
     "name": "google-font-editor-page",
     "src": "resources/pages/google-font-editor-page.tsx",
     "isDynamicEntry": true,
@@ -380,7 +380,7 @@
     ]
   },
   "resources/pages/migrations-page.tsx": {
-    "file": "assets/migrations-page-BreyheLU.js",
+    "file": "assets/migrations-page-Cy-SJqlg.js",
     "name": "migrations-page",
     "src": "resources/pages/migrations-page.tsx",
     "isDynamicEntry": true,
@@ -400,7 +400,7 @@
     ]
   },
   "resources/pages/settings-page.tsx": {
-    "file": "assets/settings-page-Ck1-CcCa.js",
+    "file": "assets/settings-page-sC5J1KHE.js",
     "name": "settings-page",
     "src": "resources/pages/settings-page.tsx",
     "isDynamicEntry": true,

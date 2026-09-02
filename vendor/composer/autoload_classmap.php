@@ -189,6 +189,7 @@ return array(
     'JooosiFon\\Core\\Cache\\FontPreloadRenderer' => $baseDir . '/src/Core/Cache/FontPreloadRenderer.php',
     'JooosiFon\\Core\\Frontpage' => $baseDir . '/src/Core/Frontpage.php',
     'JooosiFon\\Core\\Runtime' => $baseDir . '/src/Core/Runtime.php',
+    'JooosiFon\\Database\\FontTable' => $baseDir . '/src/Database/FontTable.php',
     'JooosiFon\\Database\\Migration\\AbstractMigration' => $baseDir . '/src/Database/Migration/AbstractMigration.php',
     'JooosiFon\\Database\\Migration\\Exception\\AbortMigration' => $baseDir . '/src/Database/Migration/Exception/AbortMigration.php',
     'JooosiFon\\Database\\Migration\\Exception\\MigrationException' => $baseDir . '/src/Database/Migration/Exception/MigrationException.php',
