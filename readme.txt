@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: custom fonts, google fonts, adobe fonts, gdpr, dsgvo
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -72,12 +72,17 @@ Visit [our website](https://fon.jooo.si) for more information.
 
 == Changelog ==
 
+= 2.1.2 - 2026-09-02 =
+
+**Fixed**
+
+* Fix the Yabe Webfont to Jooosi Fon upgrade migration and make legacy data cleanup optional.
+
 = 2.1.1 - 2026-08-26 =
 
 **Fixed**
 
 * Prevent scoped release builds from generating broken proxies for WordPress functions declared by test stubs.
-* Always refresh the font cache when it is regenerated and include the generation time in the stylesheet.
 
 = 2.1.0 - 2026-08-26 =
 

@@ -7,6 +7,8 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-09-02
+
 ### Fixed
 - Fix the Yabe Webfont to Jooosi Fon upgrade migration and make legacy data cleanup optional.
 
@@ -473,7 +475,8 @@ and the Pro release major version is one higher than the matching Free release.
 ### Added
 - Initial release.
 
-[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.1...HEAD
+[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.2...HEAD
+[2.1.2]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.0...2.1.0
 [2.1.0]: https://github.com/jooosi-project/jooosi-fon/compare/2.0.114...2.1.0
