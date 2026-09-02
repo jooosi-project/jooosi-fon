@@ -20,7 +20,9 @@ use JooosiFonDeps\JOOOSI_FON;
 final class LegacyRebrandUpgrade
 {
     public const CACHE_REBUILD_OPTION = 'jooosi_fon_legacy_cache_rebuild_required';
+    public const DELETE_LEGACY_DATA_OPTION = 'misc.delete_legacy_data';
     private const COMPLETION_OPTION = 'jooosi_fon_legacy_rebrand_upgraded';
+    private const CLEANUP_OPTION = 'jooosi_fon_legacy_data_cleaned';
     private const LEGACY_UPLOAD_DIRECTORY = 'yabe-webfont';
     private const UPLOAD_DIRECTORY = 'jooosi-fon';
     private const FONT_DIRECTORY = 'fonts';
@@ -28,6 +30,9 @@ final class LegacyRebrandUpgrade
     public function run(): void
     {
         if (get_option(self::COMPLETION_OPTION, \false) !== \false) {
+            if ($this->shouldDeleteLegacyData()) {
+                $this->deleteLegacyData();
+            }
             return;
         }
         $uploads = wp_upload_dir();
@@ -43,12 +48,15 @@ final class LegacyRebrandUpgrade
         $attachmentsComplete = $this->migrateAttachmentPaths($baseDirectory, $fontChanged);
         $fontsComplete = $attachmentsComplete && $this->migrateDirectory($legacyRoot . '/' . self::FONT_DIRECTORY, $root . '/' . self::FONT_DIRECTORY, \false, $fontChanged);
         $cacheComplete = $this->migrateDirectory($legacyRoot . '/' . self::CACHE_DIRECTORY, $root . '/' . self::CACHE_DIRECTORY, \true, $cacheChanged);
-        $rootComplete = $attachmentsComplete && $fontsComplete && $cacheComplete && $this->migrateDirectory($legacyRoot, $root, \false, $otherChanged);
+        $rootComplete = $attachmentsComplete && $fontsComplete && $cacheComplete && $this->migrateDirectory($legacyRoot, $root, \false, $otherChanged, [self::FONT_DIRECTORY, self::CACHE_DIRECTORY]);
         if ($fontChanged || $cacheChanged) {
             update_option(self::CACHE_REBUILD_OPTION, \true, \false);
         }
         if ($attachmentsComplete && $fontsComplete && $cacheComplete && $rootComplete) {
             update_option(self::COMPLETION_OPTION, JOOOSI_FON::VERSION, \false);
+            if ($this->shouldDeleteLegacyData()) {
+                $this->deleteLegacyData();
+            }
         }
     }
     private function migrateAttachmentPaths(string $baseDirectory, bool &$changed): bool
@@ -90,18 +98,13 @@ final class LegacyRebrandUpgrade
                 continue;
             }
             $changed = \true;
-            if (is_file($legacyPath)) {
-                wp_delete_file($legacyPath);
-                if (file_exists($legacyPath)) {
-                    $complete = \false;
-                }
-            }
         }
         return $complete;
     }
     /**
      * Copy first so the stored legacy path remains valid until every metadata
-     * update has succeeded. A later directory pass removes duplicate sources.
+     * update has succeeded. The legacy file is intentionally retained until
+     * the administrator explicitly requests cleanup.
      */
     private function prepareAttachmentFile(string $legacyPath, string $path): bool
     {
@@ -123,7 +126,7 @@ final class LegacyRebrandUpgrade
         }
         return \false;
     }
-    private function migrateDirectory(string $legacyDirectory, string $directory, bool $discardLegacyConflicts, bool &$changed): bool
+    private function migrateDirectory(string $legacyDirectory, string $directory, bool $discardLegacyConflicts, bool &$changed, array $ignoredEntries = []): bool
     {
         if (!is_dir($legacyDirectory)) {
             return \true;
@@ -138,6 +141,9 @@ final class LegacyRebrandUpgrade
         $complete = \true;
         foreach ($entries as $entry) {
             if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+            if (in_array($entry, $ignoredEntries, \true)) {
                 continue;
             }
             $legacyPath = $legacyDirectory . '/' . $entry;
@@ -156,14 +162,6 @@ final class LegacyRebrandUpgrade
                 $complete = \false;
             }
         }
-        $remaining = scandir($legacyDirectory);
-        if (is_array($remaining) && array_values(array_diff($remaining, ['.', '..'])) === []) {
-            if (!rmdir($legacyDirectory)) {
-                $complete = \false;
-            }
-        } else {
-            $complete = \false;
-        }
         return $complete;
     }
     private function migrateFile(string $legacyPath, string $path, bool $discardLegacyConflict, bool &$changed): bool
@@ -173,9 +171,7 @@ final class LegacyRebrandUpgrade
                 return \true;
             }
             if ($discardLegacyConflict || $this->filesMatch($legacyPath, $path)) {
-                wp_delete_file($legacyPath);
-                $changed = \true;
-                return !file_exists($legacyPath);
+                return \true;
             }
             return \false;
         }
@@ -186,19 +182,103 @@ final class LegacyRebrandUpgrade
         if (!is_dir($directory) && !wp_mkdir_p($directory)) {
             return \false;
         }
-        if (rename($legacyPath, $path)) {
-            $changed = \true;
-            return \true;
-        }
         if (!copy($legacyPath, $path) || !$this->filesMatch($legacyPath, $path)) {
             if (file_exists($path)) {
                 wp_delete_file($path);
             }
             return \false;
         }
-        wp_delete_file($legacyPath);
         $changed = \true;
-        return !file_exists($legacyPath);
+        return \true;
+    }
+    /**
+     * Delete the old Yabe Webfont upload directory after the rebrand migration
+     * has completed and the administrator has explicitly requested cleanup.
+     */
+    public function deleteLegacyData(): bool
+    {
+        if (get_option(self::COMPLETION_OPTION, \false) === \false) {
+            return \false;
+        }
+        if (get_option(self::CLEANUP_OPTION, \false) !== \false) {
+            return \true;
+        }
+        $uploads = wp_upload_dir();
+        $baseDirectory = is_array($uploads) ? rtrim((string) ($uploads['basedir'] ?? ''), '/\\') : '';
+        if ($baseDirectory === '' || !is_dir($baseDirectory)) {
+            return \false;
+        }
+        $legacyRoot = $baseDirectory . '/' . self::LEGACY_UPLOAD_DIRECTORY;
+        if (is_link($legacyRoot)) {
+            return \false;
+        }
+        if (!is_dir($legacyRoot)) {
+            update_option(self::CLEANUP_OPTION, JOOOSI_FON::VERSION, \false);
+            return \true;
+        }
+        if (!$this->deleteDirectory($legacyRoot)) {
+            return \false;
+        }
+        update_option(self::CLEANUP_OPTION, JOOOSI_FON::VERSION, \false);
+        return \true;
+    }
+    private function deleteDirectory(string $directory): bool
+    {
+        if (!is_dir($directory)) {
+            return !file_exists($directory);
+        }
+        $entries = scandir($directory);
+        if (!is_array($entries)) {
+            return \false;
+        }
+        $complete = \true;
+        foreach ($entries as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+            $path = $directory . '/' . $entry;
+            if (is_link($path)) {
+                wp_delete_file($path);
+                if (file_exists($path) || is_link($path)) {
+                    $complete = \false;
+                }
+                continue;
+            }
+            if (is_dir($path)) {
+                if (!$this->deleteDirectory($path)) {
+                    $complete = \false;
+                }
+                continue;
+            }
+            if (is_file($path)) {
+                wp_delete_file($path);
+                if (file_exists($path)) {
+                    $complete = \false;
+                }
+                continue;
+            }
+            $complete = \false;
+        }
+        if (!$complete) {
+            return \false;
+        }
+        if (!rmdir($directory)) {
+            return !is_dir($directory);
+        }
+        return \true;
+    }
+    private function shouldDeleteLegacyData(): bool
+    {
+        $stored = get_option(JOOOSI_FON::WP_OPTION . '_options', '{}');
+        if (!is_string($stored)) {
+            return \false;
+        }
+        try {
+            $options = json_decode($stored, \true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            return \false;
+        }
+        return is_array($options) && is_array($options['misc'] ?? null) && !empty($options['misc']['delete_legacy_data']);
     }
     private function filesMatch(string $legacyPath, string $path): bool
     {

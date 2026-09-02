@@ -15,6 +15,7 @@ use JooosiFonDeps\JOOOSI_FON;
 use JooosiFon\Api\AbstractApi;
 use JooosiFon\Api\ApiInterface;
 use JooosiFon\Api\Support\RequestValidator;
+use JooosiFon\Upgrade\LegacyRebrandUpgrade;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -63,8 +64,24 @@ class Option extends AbstractApi implements ApiInterface
         if (!update_option(JOOOSI_FON::WP_OPTION . '_options', $encoded) && get_option(JOOOSI_FON::WP_OPTION . '_options') !== $encoded) {
             return new WP_REST_Response(['message' => __('The settings could not be saved.', 'jooosi-fon')], 500);
         }
+        if ($this->shouldDeleteLegacyData($options) && !(new LegacyRebrandUpgrade())->deleteLegacyData()) {
+            return new WP_REST_Response(['message' => __('The legacy Yabe Webfont data cleanup was incomplete. Any remaining data was preserved.', 'jooosi-fon')], 500);
+        }
         do_action('f!jooosi/fon/api/setting/option:after_store', $options);
         do_action_deprecated('f!yabe/webfont/api/setting/option:after_store', [$options], '2.1.0', 'f!jooosi/fon/api/setting/option:after_store');
         return $this->index($wprestRequest);
+    }
+    /**
+     * @param mixed $options
+     */
+    private function shouldDeleteLegacyData($options): bool
+    {
+        if (is_object($options)) {
+            $options = get_object_vars($options);
+        }
+        if (!is_array($options) || !is_array($options['misc'] ?? null)) {
+            return \false;
+        }
+        return !empty($options['misc']['delete_legacy_data']);
     }
 }
