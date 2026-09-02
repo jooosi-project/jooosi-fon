@@ -1,5 +1,5 @@
 === Jooosi Fon - Use Custom Fonts, Google Fonts or Adobe Fonts ===
-Contributors: suasgn, jooosi, suabahasa
+Contributors: suasgn, suabahasa
 Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: custom fonts, google fonts, adobe fonts, gdpr, dsgvo
 Requires at least: 6.0

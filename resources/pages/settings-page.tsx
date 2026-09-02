@@ -38,7 +38,12 @@ interface LicenseState { key: string | null; is_activated: boolean; opt_in_pre_r
 interface CacheState { last_generated: number | string; pending_task: boolean; file_url: string }
 interface SettingsOptions {
     cache?: { inline_print?: boolean };
-    misc?: { hide_media_library?: boolean; export_bundle_binary?: boolean; disable_user_google_fonts?: boolean };
+    misc?: {
+        hide_media_library?: boolean;
+        export_bundle_binary?: boolean;
+        disable_user_google_fonts?: boolean;
+        delete_legacy_data?: boolean;
+    };
     builder_integrations?: { disable_google_fonts?: Record<string, boolean> };
     adobe_fonts?: { project_id?: string | null; kit?: unknown };
     [key: string]: unknown;
@@ -339,6 +344,30 @@ export function SettingsPage() {
                                         checked={Boolean(options.misc?.export_bundle_binary)}
                                         onCheckedChange={(checked) => setOptions(updateNested(options, 'misc', 'export_bundle_binary', checked))}
                                         aria-label={__('Binary export bundles', 'jooosi-fon')}
+                                    />
+                                </SettingRow>
+                            </FramePanel>
+                        </Frame>
+
+                        <Frame>
+                            <FrameHeader>
+                                <FrameTitle>{__('Legacy data', 'jooosi-fon')}</FrameTitle>
+                                <FrameDescription>{__('The rebrand migration keeps the original Yabe Webfont files until you choose to remove them.', 'jooosi-fon')}</FrameDescription>
+                            </FrameHeader>
+                            <FramePanel className="p-0">
+                                <SettingRow
+                                    icon={<Trash2Icon aria-hidden="true" />}
+                                    title={__('Delete old Yabe Webfont data', 'jooosi-fon')}
+                                    description={__('Delete the preserved uploads/yabe-webfont files after the migration. This cannot be undone.', 'jooosi-fon')}
+                                >
+                                    <Switch
+                                        checked={Boolean(options.misc?.delete_legacy_data)}
+                                        onCheckedChange={(checked) => {
+                                            if (!checked || window.confirm(__('Delete the preserved Yabe Webfont data? This cannot be undone.', 'jooosi-fon'))) {
+                                                setOptions(updateNested(options, 'misc', 'delete_legacy_data', checked));
+                                            }
+                                        }}
+                                        aria-label={__('Delete old Yabe Webfont data', 'jooosi-fon')}
                                     />
                                 </SettingRow>
                             </FramePanel>

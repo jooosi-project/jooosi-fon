@@ -16,6 +16,12 @@ if [[ -d "$deploy_directory/tests" ]]; then
     exit 1
 fi
 
+legacy_migration_repository="$deploy_directory/deploy/legacy-migration-repository.php"
+if [[ ! -f "$legacy_migration_repository" ]]; then
+    echo "Missing the legacy migration compatibility stub: $legacy_migration_repository" >&2
+    exit 1
+fi
+
 rm -rf "$result_directory"
 rm -rf "$deploy_directory/deploy/php-scoper-wordpress-excludes-master"
 
@@ -39,6 +45,18 @@ php -d memory_limit=-1 php-scoper.phar add-prefix \
 rm -f php-scoper.phar "$result_directory/php-scoper.phar"
 composer dump-autoload --working-dir "$result_directory" --ansi --no-dev --classmap-authoritative
 php deploy/patch-scoper-autoload.php "$result_directory/vendor/scoper-autoload.php"
+
+# The old plugin's upgrade callback can execute in the same PHP request after
+# WordPress has removed the old plugin directory. Its already-loaded Migrator
+# still resolves this class through the old Composer class map, so keep a
+# one-request compatibility file at the legacy path.
+mkdir -p "$result_directory/vendor/rosua/migrations/src"
+cp "$legacy_migration_repository" "$result_directory/vendor/rosua/migrations/src/MigrationRepository.php"
+
+if ! grep -Fq 'namespace _YabeWebfont\Rosua\Migrations;' "$result_directory/vendor/rosua/migrations/src/MigrationRepository.php"; then
+    echo "The legacy migration compatibility stub was scoped unexpectedly." >&2
+    exit 1
+fi
 
 if grep -Fq 'JooosiFonDeps\dbDelta' "$result_directory/vendor/scoper-autoload.php"; then
     echo "The scoped autoloader contains a broken dbDelta() proxy." >&2

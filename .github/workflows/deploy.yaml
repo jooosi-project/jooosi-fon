@@ -138,6 +138,9 @@ jobs:
           test -f "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
           grep -Fq "add_action( 'after_setup_theme', array( '\\\\EasyDigitalDownloads\\\\Updater\\\\Versions'" \
             "$pro/vendor/easy-digital-downloads/edd-sl-sdk/edd-sl-sdk.php"
+          test -f "$pro/vendor/rosua/migrations/src/MigrationRepository.php"
+          grep -Fq 'namespace _YabeWebfont\Rosua\Migrations;' \
+            "$pro/vendor/rosua/migrations/src/MigrationRepository.php"
 
       - name: Publish Pro build to dist branch
         env:
@@ -224,6 +227,10 @@ jobs:
             echo "The Free artifact must not contain the EDD Software Licensing SDK." >&2
             exit 1
           fi
+
+          test -f "$free/vendor/rosua/migrations/src/MigrationRepository.php"
+          grep -Fq 'namespace _YabeWebfont\Rosua\Migrations;' \
+            "$free/vendor/rosua/migrations/src/MigrationRepository.php"
 
           for directory in Beaver Blocksy Breakdance Bricks Cwicly Divi Etch FunnelKit Greenshift Oxygen SliderRevolution Spectra YellowPencil Zion; do
             if [[ -d "$free/src/Builder/$directory" ]]; then

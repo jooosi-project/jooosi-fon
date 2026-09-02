@@ -6,6 +6,7 @@ if (! class_exists('JOOOSI_FON')) {
     final class JOOOSI_FON
     {
         public const VERSION = '2.1.0';
+        public const WP_OPTION = 'jooosi_fon';
     }
 }
 
@@ -173,7 +174,7 @@ try {
 
     jooosi_fon_upgrade_assert(
         is_file($baseDirectory . '/jooosi-fon/fonts/acme.woff2'),
-        'The legacy font file was not moved.'
+        'The legacy font file was not copied.'
     );
     jooosi_fon_upgrade_assert(
         $GLOBALS['jooosi_fon_upgrade_attachment_paths'][42] === 'jooosi-fon/fonts/acme.woff2',
@@ -189,11 +190,13 @@ try {
     );
     jooosi_fon_upgrade_assert(
         is_file($baseDirectory . '/jooosi-fon/debug/stopwatch.log'),
-        'Other legacy upload artifacts were not moved.'
+        'Other legacy upload artifacts were not copied.'
     );
     jooosi_fon_upgrade_assert(
-        ! file_exists($baseDirectory . '/yabe-webfont'),
-        'The empty legacy upload directory was not removed.'
+        is_file($baseDirectory . '/yabe-webfont/fonts/acme.woff2')
+            && is_file($baseDirectory . '/yabe-webfont/cache/fonts.css')
+            && is_file($baseDirectory . '/yabe-webfont/debug/stopwatch.log'),
+        'The legacy upload data was not preserved.'
     );
     jooosi_fon_upgrade_assert(
         ($GLOBALS['jooosi_fon_upgrade_options']['jooosi_fon_legacy_cache_rebuild_required'] ?? false) === true,
@@ -202,6 +205,16 @@ try {
     jooosi_fon_upgrade_assert(
         ($GLOBALS['jooosi_fon_upgrade_options']['jooosi_fon_legacy_rebrand_upgraded'] ?? null) === JOOOSI_FON::VERSION,
         'The completed legacy upgrade was not recorded.'
+    );
+
+    $upgrade = new LegacyRebrandUpgrade();
+    jooosi_fon_upgrade_assert(
+        $upgrade->deleteLegacyData(),
+        'The explicit legacy data cleanup did not complete.'
+    );
+    jooosi_fon_upgrade_assert(
+        ! file_exists($baseDirectory . '/yabe-webfont'),
+        'The explicit legacy data cleanup did not remove the legacy upload directory.'
     );
 
     $GLOBALS['jooosi_fon_upgrade_options'] = [];

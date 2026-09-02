@@ -7,6 +7,9 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- Fix the Yabe Webfont to Jooosi Fon upgrade migration and make legacy data cleanup optional.
+
 ## [2.1.1] - 2026-08-26
 
 ### Fixed
