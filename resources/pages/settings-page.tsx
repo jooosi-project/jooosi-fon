@@ -36,6 +36,15 @@ import { cn } from '@/lib/utils';
 
 interface LicenseState { key: string | null; is_activated: boolean; opt_in_pre_release: boolean }
 interface CacheState { last_generated: number | string; pending_task: boolean; file_url: string }
+interface LegacyMigrationState {
+    complete: boolean;
+    filesystem_complete: boolean;
+    font_table_available: boolean;
+    legacy_data_available: boolean;
+    current_data_available: boolean;
+    cleanup_requested: boolean;
+    cleanup_complete: boolean;
+}
 interface SettingsOptions {
     cache?: { inline_print?: boolean };
     misc?: {
@@ -143,6 +152,15 @@ export function SettingsPage() {
     const [licenseKey, setLicenseKey] = useState('');
     const [showLicense, setShowLicense] = useState(false);
     const [cache, setCache] = useState<CacheState>({ last_generated: '', pending_task: false, file_url: '' });
+    const [legacyMigration, setLegacyMigration] = useState<LegacyMigrationState>({
+        complete: false,
+        filesystem_complete: false,
+        font_table_available: false,
+        legacy_data_available: false,
+        current_data_available: false,
+        cleanup_requested: false,
+        cleanup_complete: false,
+    });
     const [options, setOptions] = useState<SettingsOptions>({});
     const [optionsSnapshot, setOptionsSnapshot] = useState('{}');
     const [loading, setLoading] = useState(true);
@@ -162,7 +180,7 @@ export function SettingsPage() {
         Promise.all([
             api.get<{ license: LicenseState }>('/setting/license/index'),
             api.get<{ cache: CacheState }>('/setting/cache/index'),
-            api.get<{ options: SettingsOptions }>('/setting/option/index'),
+            api.get<{ options: SettingsOptions; legacy_migration: LegacyMigrationState }>('/setting/option/index'),
         ]).then(([licenseResponse, cacheResponse, optionsResponse]) => {
             if (cancelled) return;
             setLicense(licenseResponse.data.license);
@@ -170,6 +188,7 @@ export function SettingsPage() {
             setCache(cacheResponse.data.cache);
             setOptions(optionsResponse.data.options);
             setOptionsSnapshot(JSON.stringify(optionsResponse.data.options));
+            setLegacyMigration(optionsResponse.data.legacy_migration);
             setAdobeProjectId(optionsResponse.data.options.adobe_fonts?.project_id || '');
             setAdobeKit(optionsResponse.data.options.adobe_fonts?.kit || null);
         }).catch((requestError) => {
@@ -218,6 +237,16 @@ export function SettingsPage() {
             const { data } = await api.post<{ cache: CacheState }>('/setting/cache/generate');
             setCache(data.cache);
             toast.success(__('Font CSS cache generation started.', 'jooosi-fon'));
+        } catch (requestError) { toast.error(getErrorMessage(requestError)); } finally { setBusy(null); }
+    };
+
+    const migrateLegacy = async () => {
+        if (!window.confirm(__('Run the Yabe Webfont migration now? Existing Yabe data will be preserved.', 'jooosi-fon'))) return;
+        setBusy('legacy-migration');
+        try {
+            const { data } = await api.post<{ legacy_migration: LegacyMigrationState }>('/setting/option/migrate-legacy');
+            setLegacyMigration(data.legacy_migration);
+            toast.success(__('Yabe Webfont data migration completed.', 'jooosi-fon'));
         } catch (requestError) { toast.error(getErrorMessage(requestError)); } finally { setBusy(null); }
     };
 
@@ -352,9 +381,31 @@ export function SettingsPage() {
                         <Frame>
                             <FrameHeader>
                                 <FrameTitle>{__('Legacy data', 'jooosi-fon')}</FrameTitle>
-                                <FrameDescription>{__('The rebrand migration keeps the original Yabe Webfont files until you choose to remove them.', 'jooosi-fon')}</FrameDescription>
+                                <FrameDescription>{__('Migrate data from the old Yabe Webfont version and keep the original files until you choose to remove them.', 'jooosi-fon')}</FrameDescription>
                             </FrameHeader>
                             <FramePanel className="p-0">
+                                <SettingRow
+                                    icon={<RefreshCwIcon aria-hidden="true" />}
+                                    title={__('Migrate old Yabe Webfont data', 'jooosi-fon')}
+                                    description={legacyMigration.complete
+                                        ? __('The old Yabe Webfont data has been migrated. The original files remain available as a backup.', 'jooosi-fon')
+                                        : legacyMigration.filesystem_complete && !legacyMigration.font_table_available
+                                            ? __('The files were migrated, but the font library table is missing. Run this to repair it.', 'jooosi-fon')
+                                            : __('Run this if the automatic upgrade did not move the old font files or records.', 'jooosi-fon')}
+                                >
+                                    <div className="flex flex-wrap items-center justify-end gap-2">
+                                        <Badge variant={legacyMigration.complete ? 'success-light' : 'warning-light'}>
+                                            {legacyMigration.complete ? __('Migrated', 'jooosi-fon') : __('Action needed', 'jooosi-fon')}
+                                        </Badge>
+                                        {!legacyMigration.complete && (
+                                            <Button type="button" size="sm" variant="outline" onClick={migrateLegacy} disabled={busy !== null}>
+                                                {busy === 'legacy-migration' ? <Spinner /> : <RefreshCwIcon aria-hidden="true" />}
+                                                {__('Run migration', 'jooosi-fon')}
+                                            </Button>
+                                        )}
+                                    </div>
+                                </SettingRow>
+                                <Separator />
                                 <SettingRow
                                     icon={<Trash2Icon aria-hidden="true" />}
                                     title={__('Delete old Yabe Webfont data', 'jooosi-fon')}

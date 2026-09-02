@@ -7,6 +7,12 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- Repair a missing font library table and add a manual Yabe Webfont migration action in Settings.
+
+### Changed
+- Test compatibility with WordPress 7.1.
+
 ## [2.1.2] - 2026-09-02
 
 ### Fixed

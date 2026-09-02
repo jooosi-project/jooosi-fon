@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JooosiFon\Migrations;
 
+use JooosiFon\Database\FontTable;
 use JooosiFon\Database\Migration\AbstractMigration;
 
 /**
@@ -19,6 +20,9 @@ final class Version20260818000000 extends AbstractMigration
     public function up(): void
     {
         global $wpdb;
+
+        // Repair an incomplete rebrand before altering or querying the table.
+        FontTable::migrateLegacy();
 
         $table = $wpdb->prefix . 'jooosi_fon_fonts';
         $statements = [

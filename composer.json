@@ -50,7 +50,8 @@
         ],
         "test-migrations": [
             "@php tests/migration-sources.php",
-            "@php tests/database-migrations.php"
+            "@php tests/database-migrations.php",
+            "@php tests/font-table.php"
         ],
         "test-upgrades": "@php tests/legacy-rebrand-upgrade.php"
     },

@@ -85,6 +85,8 @@ function wp_delete_file(string $file): void
 
 final class JooosiFonLegacyUpgradeFakeWpdb
 {
+    public string $prefix = 'wp_';
+
     public string $postmeta = 'wp_postmeta';
 
     public function esc_like(string $value): string
@@ -115,8 +117,14 @@ final class JooosiFonLegacyUpgradeFakeWpdb
 
         return $rows;
     }
+
+    public function get_var(string $query): string
+    {
+        return $this->prefix . 'jooosi_fon_fonts';
+    }
 }
 
+require_once dirname(__DIR__) . '/src/Database/FontTable.php';
 require_once dirname(__DIR__) . '/src/Upgrade/LegacyRebrandUpgrade.php';
 
 use JooosiFon\Upgrade\LegacyRebrandUpgrade;
@@ -202,6 +210,10 @@ try {
         ($GLOBALS['jooosi_fon_upgrade_options']['jooosi_fon_legacy_cache_rebuild_required'] ?? false) === true,
         'The cache rebuild was not requested after moving legacy files.'
     );
+
+    $status = (new LegacyRebrandUpgrade())->status();
+    jooosi_fon_upgrade_assert($status['complete'] === true, 'The completed legacy migration was not reported correctly.');
+    jooosi_fon_upgrade_assert($status['legacy_data_available'] === true, 'The preserved legacy data was not reported.');
     jooosi_fon_upgrade_assert(
         ($GLOBALS['jooosi_fon_upgrade_options']['jooosi_fon_legacy_rebrand_upgraded'] ?? null) === JOOOSI_FON::VERSION,
         'The completed legacy upgrade was not recorded.'

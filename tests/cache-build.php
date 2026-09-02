@@ -100,6 +100,31 @@ namespace {
 
         public string $last_error = '';
 
+        public function esc_like(string $value): string
+        {
+            return $value;
+        }
+
+        public function prepare(string $query, ...$arguments): string
+        {
+            return $query;
+        }
+
+        public function get_var(string $query): string
+        {
+            return $this->prefix . 'jooosi_fon_fonts';
+        }
+
+        public function has_cap(string $capability): bool
+        {
+            return $capability === 'collation';
+        }
+
+        public function get_charset_collate(): string
+        {
+            return '';
+        }
+
         public function get_results(string $query): array
         {
             return [];

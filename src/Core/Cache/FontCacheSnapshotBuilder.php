@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JooosiFon\Core\Cache;
 
 use JooosiFon\Api\Support\FontCodec;
+use JooosiFon\Database\FontTable;
 use JooosiFon\Utils\Font;
 
 /**
@@ -19,6 +20,10 @@ final class FontCacheSnapshotBuilder
     public function build(): array
     {
         global $wpdb;
+
+        // Cache generation may be the first request after a failed update.
+        // Ensure the table exists even when migration history is stale.
+        FontTable::ensure();
 
         $rows = $wpdb->get_results("
             SELECT id, type, family, metadata, font_faces

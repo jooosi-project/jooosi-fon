@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/src/Core/Cache/FontCssRenderer.php';
 require_once dirname(__DIR__) . '/src/Core/Cache/FontPreloadRenderer.php';
 require_once dirname(__DIR__) . '/src/Api/Support/FontCodec.php';
+require_once dirname(__DIR__) . '/src/Database/FontTable.php';
 require_once dirname(__DIR__) . '/src/Utils/Font.php';
 require_once dirname(__DIR__) . '/src/Core/Cache/FontCacheSnapshotBuilder.php';
 
@@ -151,6 +152,31 @@ $GLOBALS['wpdb'] = new class([$row]) {
     public function __construct(array $rows)
     {
         $this->rows = $rows;
+    }
+
+    public function esc_like(string $value): string
+    {
+        return $value;
+    }
+
+    public function prepare(string $query, ...$arguments): string
+    {
+        return $query;
+    }
+
+    public function get_var(string $query): string
+    {
+        return $this->prefix . 'jooosi_fon_fonts';
+    }
+
+    public function has_cap(string $capability): bool
+    {
+        return $capability === 'collation';
+    }
+
+    public function get_charset_collate(): string
+    {
+        return '';
     }
 
     public function get_results(string $query): array
