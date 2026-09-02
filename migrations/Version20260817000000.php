@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace JooosiFon\Migrations;
 
+use JooosiFon\Database\FontTable;
 use JooosiFon\Database\Migration\AbstractMigration;
 use wpdb;
 /**
@@ -18,25 +19,7 @@ final class Version20260817000000 extends AbstractMigration
     }
     public function up(): void
     {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        $legacyTable = $wpdb->prefix . 'yabe_webfont_fonts';
-        $table = $wpdb->prefix . 'jooosi_fon_fonts';
-        if (!$this->table_exists($legacyTable)) {
-            return;
-        }
-        if (!$this->table_exists($table)) {
-            if ($wpdb->query("RENAME TABLE `{$legacyTable}` TO `{$table}`") === \false) {
-                throw new \RuntimeException($wpdb->last_error ?: 'Unable to rename the Jooosi Fon fonts table.');
-            }
-            return;
-        }
-        // An interrupted/manual migration can leave both tables behind. Merge
-        // non-conflicting records without dropping either source of data.
-        $columns = '`id`, `type`, `status`, `title`, `slug`, `family`, `metadata`, `font_faces`, `created_at`, `updated_at`, `deleted_at`';
-        if ($wpdb->query("INSERT IGNORE INTO `{$table}` ({$columns}) SELECT {$columns} FROM `{$legacyTable}`") === \false) {
-            throw new \RuntimeException($wpdb->last_error ?: 'Unable to merge the legacy Jooosi Fon fonts table.');
-        }
+        FontTable::migrateLegacy();
     }
     public function down(): void
     {

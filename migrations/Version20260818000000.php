@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace JooosiFon\Migrations;
 
+use JooosiFon\Database\FontTable;
 use JooosiFon\Database\Migration\AbstractMigration;
 /**
  * Make font payload storage and the API's common filters scale safely.
@@ -16,6 +17,8 @@ final class Version20260818000000 extends AbstractMigration
     public function up(): void
     {
         global $wpdb;
+        // Repair an incomplete rebrand before altering or querying the table.
+        FontTable::migrateLegacy();
         $table = $wpdb->prefix . 'jooosi_fon_fonts';
         $statements = ["ALTER TABLE `{$table}` MODIFY `metadata` MEDIUMTEXT NULL, MODIFY `font_faces` MEDIUMTEXT NULL"];
         $indexes = ['jooosi_fon_deleted_status' => '`deleted_at`, `status`', 'jooosi_fon_type_deleted' => '`type`, `deleted_at`', 'jooosi_fon_slug' => '`slug`(191)'];
