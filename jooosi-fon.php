@@ -1,8 +1,6 @@
 <?php
 
 /**
- * Jooosi Fon
- *
  * @wordpress-plugin
  * Plugin Name:         Jooosi Fon
  * Plugin URI:          https://fon.jooo.si
@@ -18,7 +16,6 @@
  * License:             GPL-3.0-or-later
  *
  * @package             JooosiFon
- * @author              Joshua Gugun Siagian <suabahasa@gmail.com>
  */
 
 declare(strict_types=1);

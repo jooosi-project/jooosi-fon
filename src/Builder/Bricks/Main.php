@@ -67,7 +67,7 @@ class Main implements BuilderInterface
 
         if (version_compare(BRICKS_VERSION, '2.0-alpha', '>=')) {
             wp_add_inline_script('bricks-builder', 'bricksData.fonts.standard = bricksData.fonts.standard.concat(' . json_encode(array_column($fonts, 'family'), JSON_THROW_ON_ERROR) . ');', 'before');
-            wp_add_inline_script('bricks-builder', 'bricksData.loadData.fontFavorites = bricksData.loadData.fontFavorites.concat(' . json_encode(array_map(static fn ($font) => 'standard_' . $font['family'], $fonts), JSON_THROW_ON_ERROR) . ');', 'before');
+            wp_add_inline_script('bricks-builder', 'bricksData.loadData = bricksData.loadData || {}; bricksData.loadData.fontFavorites = (bricksData.loadData.fontFavorites || []).concat(' . json_encode(array_map(static fn ($font) => 'standard_' . $font['family'], $fonts), JSON_THROW_ON_ERROR) . ');', 'before');
             wp_add_inline_script('bricks-builder', "bricksData.fonts.options = { ...{'jooosiFonGroupTitle': 'Jooosi Fon' }, ...jooosiFonBricksOptions, ...bricksData.fonts.options};", 'before');
         } elseif (version_compare(BRICKS_VERSION, '1.7.1', '>=')) {
             wp_add_inline_script('bricks-builder', 'bricksData.fonts.jooosiFon = ' . json_encode(array_column($fonts, 'family'), JSON_THROW_ON_ERROR), 'before');

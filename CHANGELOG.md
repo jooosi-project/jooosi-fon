@@ -7,6 +7,9 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- Bricks 2.x integration when font favorites are not initialized.
+
 ## [2.1.3] - 2026-09-02
 
 ### Fixed
