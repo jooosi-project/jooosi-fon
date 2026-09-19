@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: custom fonts, google fonts, adobe fonts, gdpr, dsgvo
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -71,6 +71,12 @@ Visit [our website](https://fon.jooo.si) for more information.
 [youtube https://www.youtube.com/watch?v=A0JZzEVIUzQ]
 
 == Changelog ==
+
+= 1.1.4 - 2026-09-19 =
+
+**Fixed**
+
+* Bricks 2.x integration when font favorites are not initialized.
 
 = 1.1.3 - 2026-09-02 =
 
