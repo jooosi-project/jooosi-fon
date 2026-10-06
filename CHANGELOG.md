@@ -7,6 +7,9 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- WPML styles affecting the Jooosi Fon admin page when the WPML plugin is active.
+
 ## [2.1.4] - 2026-09-19
 
 ### Fixed
