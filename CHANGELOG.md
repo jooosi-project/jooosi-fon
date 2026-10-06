@@ -7,6 +7,8 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+## [2.1.5] - 2026-10-06
+
 ### Fixed
 - WPML styles affecting the Jooosi Fon admin page when the WPML plugin is active.
 
@@ -491,7 +493,8 @@ and the Pro release major version is one higher than the matching Free release.
 ### Added
 - Initial release.
 
-[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.4...HEAD
+[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.5...HEAD
+[2.1.5]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.2...2.1.3
 [2.1.2]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.1...2.1.2
