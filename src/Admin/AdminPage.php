@@ -73,6 +73,26 @@ class AdminPage
     {
         add_action('admin_head', static fn() => remove_action('admin_notices', 'update_nag', 3), 1);
         add_action('admin_enqueue_scripts', fn() => $this->enqueue_scripts());
+        add_action('wp_print_styles', fn() => $this->dequeue_wpml_styles(), \PHP_INT_MAX);
+    }
+    /**
+     * Keep WPML admin styles from leaking into the Jooosi Fon application.
+     * The application has no WPML-specific UI, and those global styles can
+     * collide with its utility classes.
+     */
+    private function dequeue_wpml_styles(): void
+    {
+        $styles = wp_styles();
+        foreach ($styles->queue as $handle) {
+            $style = $styles->registered[$handle] ?? null;
+            if (!$style) {
+                continue;
+            }
+            $identity = $handle . ' ' . (string) $style->src;
+            if (preg_match('~sitepress-multilingual-cms|(?:^|[^a-z0-9])(?:wpml|icl)(?:[^a-z0-9]|$)~i', $identity) === 1) {
+                wp_dequeue_style($handle);
+            }
+        }
     }
     private function enqueue_scripts()
     {

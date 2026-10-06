@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: custom fonts, google fonts, adobe fonts, gdpr, dsgvo
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -71,6 +71,12 @@ Visit [our website](https://fon.jooo.si) for more information.
 [youtube https://www.youtube.com/watch?v=A0JZzEVIUzQ]
 
 == Changelog ==
+
+= 1.1.5 - 2026-10-06 =
+
+**Fixed**
+
+* WPML styles affecting the Jooosi Fon admin page when the WPML plugin is active.
 
 = 1.1.4 - 2026-09-19 =
 
