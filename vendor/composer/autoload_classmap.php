@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'JooosiFonDeps\\Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'JooosiFonDeps\\Hidehalo\\Nanoid\\Client' => $vendorDir . '/hidehalo/nanoid-php/src/Client.php',
     'JooosiFonDeps\\Hidehalo\\Nanoid\\Core' => $vendorDir . '/hidehalo/nanoid-php/src/Core.php',
     'JooosiFonDeps\\Hidehalo\\Nanoid\\CoreInterface' => $vendorDir . '/hidehalo/nanoid-php/src/CoreInterface.php',
