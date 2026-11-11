@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'JooosiFonDeps\\Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'EasyDigitalDownloads\\Updater\\Admin\\Notices' => $vendorDir . '/easy-digital-downloads/edd-sl-sdk/src/Admin/Notices.php',
     'EasyDigitalDownloads\\Updater\\Handlers\\Handler' => $vendorDir . '/easy-digital-downloads/edd-sl-sdk/src/Handlers/Handler.php',
     'EasyDigitalDownloads\\Updater\\Handlers\\Plugin' => $vendorDir . '/easy-digital-downloads/edd-sl-sdk/src/Handlers/Plugin.php',

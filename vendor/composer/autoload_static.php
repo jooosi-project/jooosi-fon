@@ -115,7 +115,7 @@ class ComposerStaticInitaed462212d3f4c500a68ea77cbd9569f
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'JooosiFonDeps\\Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'EasyDigitalDownloads\\Updater\\Admin\\Notices' => __DIR__ . '/..' . '/easy-digital-downloads/edd-sl-sdk/src/Admin/Notices.php',
         'EasyDigitalDownloads\\Updater\\Handlers\\Handler' => __DIR__ . '/..' . '/easy-digital-downloads/edd-sl-sdk/src/Handlers/Handler.php',
         'EasyDigitalDownloads\\Updater\\Handlers\\Plugin' => __DIR__ . '/..' . '/easy-digital-downloads/edd-sl-sdk/src/Handlers/Plugin.php',
