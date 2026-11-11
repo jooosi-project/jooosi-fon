@@ -7,6 +7,8 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+## [2.1.6] - 2026-11-11
+
 ### Fixed
 - Plugin not properly deployed 
 
@@ -496,7 +498,8 @@ and the Pro release major version is one higher than the matching Free release.
 ### Added
 - Initial release.
 
-[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.5...HEAD
+[unreleased]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.6...HEAD
+[2.1.6]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/jooosi-project/jooosi-fon/compare/2.1.2...2.1.3

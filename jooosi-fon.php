@@ -5,7 +5,7 @@
  * Plugin Name:         Jooosi Fon
  * Plugin URI:          https://fon.jooo.si
  * Description:         Easy self-host Google Fonts, Adobe Fonts support, or upload custom fonts in WordPress that are integrated into the most popular themes and page builders.
- * Version:             2.1.5
+ * Version:             2.1.6
  * Requires at least:   6.0
  * Requires PHP:        7.4
  * Author:              Jooosi
