@@ -7,6 +7,9 @@ and the Pro release major version is one higher than the matching Free release.
 
 ## [Unreleased]
 
+### Fixed
+- Plugin not properly deployed 
+
 ## [2.1.5] - 2026-10-06
 
 ### Fixed

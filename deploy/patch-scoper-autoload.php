@@ -27,43 +27,81 @@ PHP;
 $hasLoadPatch = str_contains($contents, $loadScopedRegistry);
 $hasSavePatch = str_contains($contents, $saveScopedRegistry);
 
-if ($hasLoadPatch || $hasSavePatch) {
-    if ($hasLoadPatch && $hasSavePatch) {
-        exit(0);
-    }
-
+if ($hasLoadPatch !== $hasSavePatch) {
     fwrite(STDERR, "The scoped Composer registry patch is incomplete.\n");
     exit(1);
 }
 
-$loadMarker = <<<'PHP'
+if (! $hasLoadPatch) {
+    $loadMarker = <<<'PHP'
     $loader = require_once __DIR__.'/autoload.php';
 PHP;
 
-$restoreMarker = <<<'PHP'
+    $restoreMarker = <<<'PHP'
     // Restore the backup and ensure the excluded files are properly marked as loaded
 PHP;
 
-$contents = str_replace(
-    $loadMarker,
-    $loadScopedRegistry . "\n\n" . $loadMarker,
-    $contents,
-    $loadMarkerCount,
-);
+    $contents = str_replace(
+        $loadMarker,
+        $loadScopedRegistry . "\n\n" . $loadMarker,
+        $contents,
+        $loadMarkerCount,
+    );
 
-$contents = str_replace(
-    $restoreMarker,
-    $saveScopedRegistry . "\n\n" . $restoreMarker,
-    $contents,
-    $restoreMarkerCount,
-);
+    $contents = str_replace(
+        $restoreMarker,
+        $saveScopedRegistry . "\n\n" . $restoreMarker,
+        $contents,
+        $restoreMarkerCount,
+    );
 
-if ($loadMarkerCount !== 1 || $restoreMarkerCount !== 1) {
-    fwrite(STDERR, "Unable to locate the expected PHP-Scoper autoloader markers.\n");
-    exit(1);
+    if ($loadMarkerCount !== 1 || $restoreMarkerCount !== 1) {
+        fwrite(STDERR, "Unable to locate the expected PHP-Scoper autoloader markers.\n");
+        exit(1);
+    }
+
+    if (file_put_contents($scoperAutoloadPath, $contents) === false) {
+        fwrite(STDERR, "Unable to update {$scoperAutoloadPath}.\n");
+        exit(1);
+    }
 }
 
-if (file_put_contents($scoperAutoloadPath, $contents) === false) {
-    fwrite(STDERR, "Unable to update {$scoperAutoloadPath}.\n");
-    exit(1);
+$unscopedInstalledVersionsEntry = "'Composer\\\\InstalledVersions' =>";
+$scopedInstalledVersionsEntry = "'JooosiFonDeps\\\\Composer\\\\InstalledVersions' =>";
+$composerDirectory = dirname($scoperAutoloadPath) . '/composer';
+
+foreach (['autoload_classmap.php', 'autoload_static.php'] as $autoloadMap) {
+    $autoloadMapPath = $composerDirectory . '/' . $autoloadMap;
+
+    if (! is_file($autoloadMapPath)) {
+        fwrite(STDERR, "Missing Composer autoload map {$autoloadMapPath}.\n");
+        exit(1);
+    }
+
+    $autoloadMapContents = file_get_contents($autoloadMapPath);
+
+    if ($autoloadMapContents === false) {
+        fwrite(STDERR, "Unable to read {$autoloadMapPath}.\n");
+        exit(1);
+    }
+
+    $unscopedEntryCount = substr_count($autoloadMapContents, $unscopedInstalledVersionsEntry);
+    $scopedEntryCount = substr_count($autoloadMapContents, $scopedInstalledVersionsEntry);
+
+    if ($unscopedEntryCount === 1 && $scopedEntryCount === 0) {
+        $autoloadMapContents = str_replace(
+            $unscopedInstalledVersionsEntry,
+            $scopedInstalledVersionsEntry,
+            $autoloadMapContents,
+            $replacedEntryCount,
+        );
+
+        if ($replacedEntryCount !== 1 || file_put_contents($autoloadMapPath, $autoloadMapContents) === false) {
+            fwrite(STDERR, "Unable to patch Composer InstalledVersions mapping in {$autoloadMapPath}.\n");
+            exit(1);
+        }
+    } elseif ($unscopedEntryCount !== 0 || $scopedEntryCount !== 1) {
+        fwrite(STDERR, "Expected exactly one scoped Composer InstalledVersions mapping in {$autoloadMapPath}.\n");
+        exit(1);
+    }
 }
